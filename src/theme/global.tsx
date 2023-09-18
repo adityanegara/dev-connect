@@ -3,11 +3,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { jsx } from '@emotion/react'
 import { css } from '@emotion/react/macro'
-import theme from './styledTheme'
 
 const global = css({
   body: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: '#FFF0E5',
     margin: 0,
     boxSizing: 'border-box',
     padding: 0,
