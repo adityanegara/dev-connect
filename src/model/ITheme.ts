@@ -7,11 +7,17 @@ declare module '@emotion/react' {
       desktop: string
     }
     colors: {
-      brown: string
-      darkerBrown: string
-      gray: string
-      black: string
-      white: string
+      primary: {
+        normal: string
+        hover: string
+      }
+      accent: {
+        backgroundColor: string
+        black: string
+        gray: string
+        white: string
+        danger: string
+      }
     }
     fonts: {
       regular: string
