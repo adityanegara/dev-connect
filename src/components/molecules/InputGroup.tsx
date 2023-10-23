@@ -1,12 +1,15 @@
-import React, { HTMLInputTypeAttribute } from 'react'
+import React, { HTMLInputTypeAttribute, useState } from 'react'
 import styled from '@emotion/styled'
-import { AiFillEye } from 'react-icons/ai'
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import Input from '../atoms/Input'
 
 interface InputGroupProps {
   id: string
   type: HTMLInputTypeAttribute
   errorMessage: string
   labelText: string
+  value: string
+  onChange: (e: React.FormEvent<HTMLInputElement>) => void
 }
 
 const InputGroupStyled = styled.div(({ theme }) => ({
@@ -31,21 +34,6 @@ const InputGroupStyled = styled.div(({ theme }) => ({
       color: theme.colors.primary.hover
     }
   },
-  input: {
-    marginTop: '1.3px',
-    fontSize: '17px',
-    paddingTop: '5px',
-    paddingBottom: '5px',
-    borderRadius: '2px',
-    textIndent: '10px',
-    transition: 'ease-in 0.2s',
-    outline: 'none',
-    border: `1px solid ${theme.colors.accent.black}`
-  },
-  'input: focus': {
-    border: `1px solid ${theme.colors.primary.normal}`,
-    outline: `1px solid ${theme.colors.primary.normal}`
-  },
   small: {
     color: theme.colors.accent.danger,
     opacity: 0
@@ -56,24 +44,52 @@ const InputGroup = ({
   id,
   errorMessage,
   labelText,
-  type
+  type,
+  value,
+  onChange
 }: InputGroupProps): JSX.Element => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false)
+
+  const togglePasswordVisibility = (): void => {
+    setIsPasswordVisible((currentVisibility) => !currentVisibility)
+  }
+
   const renderPasswordVisibilityButton = (
     type: HTMLInputTypeAttribute
   ): JSX.Element | null => {
     return type === 'password'
       ? (
-      <button className="password-button">
-        <AiFillEye className="password-visibility" />
+      <button type="button" className="password-button" onClick={togglePasswordVisibility}>
+        {isPasswordVisible
+          ? (
+          <AiFillEyeInvisible className="password-visibility" />
+            )
+          : (
+          <AiFillEye className="password-visibility" />
+            )}
       </button>
         )
       : null
   }
 
+  const getInputType = (
+    type: HTMLInputTypeAttribute
+  ): HTMLInputTypeAttribute => {
+    if (type === 'password') {
+      return isPasswordVisible ? 'text' : 'password'
+    }
+    return type
+  }
+
   return (
     <InputGroupStyled>
       <label htmlFor={id}>{labelText}</label>
-      <input type={type} id={id} name={id} />
+      <Input
+        type={getInputType(type)}
+        id={id}
+        value={value}
+        onChange={onChange}
+      />
       <small>{errorMessage}</small>
       {renderPasswordVisibilityButton(type)}
     </InputGroupStyled>

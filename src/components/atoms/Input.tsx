@@ -1,5 +1,12 @@
-import React from 'react'
+import React, { HTMLInputTypeAttribute } from 'react'
 import styled from '@emotion/styled'
+
+interface InputProps {
+  type: HTMLInputTypeAttribute
+  id: string
+  value: string
+  onChange: (e: React.FormEvent<HTMLInputElement>) => void
+}
 
 const InputStyled = styled.input(({ theme }) => ({
   marginTop: '1.3px',
@@ -17,6 +24,8 @@ const InputStyled = styled.input(({ theme }) => ({
   }
 }))
 
-const Input = () =>{
-    
-}
+const Input = ({ type, id, value, onChange }: InputProps): JSX.Element => (
+  <InputStyled type={type} id={id} name={id} value={value} onChange={onChange}/>
+)
+
+export default Input
