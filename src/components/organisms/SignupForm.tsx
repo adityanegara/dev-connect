@@ -2,6 +2,13 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import InputGroup from '../molecules/InputGroup'
 
+interface SignUpFormInput {
+  email: string
+  username: string
+  password: string
+  confirmPassword: string
+}
+
 const FormStyled = styled.form(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -22,28 +29,126 @@ const FormStyled = styled.form(({ theme }) => ({
 
 const SignupForm = (): JSX.Element => {
   const [email, setEmail] = useState<string>('')
+  const [emailError, setEmailError] = useState<string | null>(null)
   const [username, setUsername] = useState<string>('')
+  const [usernameError, setUsernameError] = useState<string | null>(null)
   const [password, setPassword] = useState<string>('')
+  const [passwordError, setPasswordError] = useState<string | null>(null)
   const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+  string | null
+  >(null)
+
+  const isEmailError = (email: string): boolean => {
+    const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+    if (!expression.test(email)) {
+      setEmailError('Invalid Email')
+      return true
+    } else if (email === '') {
+      setEmailError('Please fill the email')
+      return true
+    } else {
+      setEmailError(null)
+      return false
+    }
+  }
+
+  const isUsernameError = (username: string): boolean => {
+    if (username === '') {
+      setUsernameError('Please fill the username')
+      return true
+    } else {
+      setUsernameError(null)
+      return false
+    }
+  }
+
+  const isPasswordError = (password: string): boolean => {
+    const lowerCaseLetters = /[a-z]/g
+    const upperCaseLetters = /[A-Z]/g
+    const numbers = /[0-9]/g
+    if (password === '') {
+      setPasswordError('Please fill the password')
+      return true
+    } else if (password.match(lowerCaseLetters) == null) {
+      setPasswordError(
+        'Password need to contain at least one lowercase letters'
+      )
+      return true
+    } else if (password.match(upperCaseLetters) == null) {
+      setPasswordError(
+        'Password need to contain at least one uppercase letters'
+      )
+      return true
+    } else if (password.match(numbers) == null) {
+      setPasswordError('Password need to contain at least one numbers')
+      return true
+    } else if (password.length < 8) {
+      setPasswordError('Password need at least 8 characters long')
+      return true
+    } else if (password === '') {
+      setPasswordError('Please fill the password')
+      return true
+    } else {
+      setPasswordError(null)
+      return false
+    }
+  }
+
+  const isConfirmPasswordError = (
+    confirmPassword: string,
+    password: string
+  ): boolean => {
+    if (confirmPassword === '') {
+      setConfirmPasswordError('Please fill the confirm password')
+      return true
+    } else if (confirmPassword !== password) {
+      setConfirmPasswordError('Confirm password must match with password')
+      return true
+    } else {
+      setConfirmPasswordError(null)
+      return false
+    }
+  }
+
+  const isFormError = ({
+    email,
+    username,
+    password,
+    confirmPassword
+  }: SignUpFormInput): boolean => {
+    const emailError = isEmailError(email)
+    const usernameError = isUsernameError(username)
+    const passwordError = isPasswordError(password)
+    const confirmPasswordError = isConfirmPasswordError(confirmPassword, password)
+
+    return emailError || usernameError || passwordError || confirmPasswordError
+  }
 
   const handleOnSubmit = (e: React.FormEvent): void => {
     e.preventDefault()
-    console.log('email', email)
-    console.log('username', username)
-    console.log('password', password)
-    console.log('confirm password', confirmPassword)
+    if (isFormError({ email, username, password, confirmPassword })) {
+      console.log('form error')
+    } else {
+      console.log('submitting')
+    }
   }
 
   return (
-    <FormStyled autoComplete="off" onSubmit={handleOnSubmit}>
+    <FormStyled
+      autoComplete="off"
+      onSubmit={(e) => {
+        handleOnSubmit(e)
+      }}
+    >
       <InputGroup
         onChange={(e) => {
           setEmail(e.currentTarget.value)
         }}
         id="email"
         labelText="Email"
-        type="email"
-        errorMessage="Please enter a valid email"
+        type="text"
+        errorMessage={emailError}
         value={email}
       />
       <InputGroup
@@ -53,7 +158,7 @@ const SignupForm = (): JSX.Element => {
         id="username"
         labelText="Username"
         type="text"
-        errorMessage="Please enter a valid username"
+        errorMessage={usernameError}
         value={username}
       />
       <InputGroup
@@ -63,7 +168,7 @@ const SignupForm = (): JSX.Element => {
         id="password"
         labelText="Password"
         type="password"
-        errorMessage="Password must include at least 8 characters."
+        errorMessage={passwordError}
         value={password}
       />
       <InputGroup
@@ -73,10 +178,12 @@ const SignupForm = (): JSX.Element => {
         id="confirm-password"
         labelText="Confirm password"
         type="password"
-        errorMessage="Confirm Password does not match with password."
+        errorMessage={confirmPasswordError}
         value={confirmPassword}
       />
-      <button type='submit' className="signup-button">Sign up</button>
+      <button type="submit" className="signup-button">
+        Sign up
+      </button>
     </FormStyled>
   )
 }

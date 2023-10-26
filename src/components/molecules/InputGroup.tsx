@@ -6,7 +6,7 @@ import Input from '../atoms/Input'
 interface InputGroupProps {
   id: string
   type: HTMLInputTypeAttribute
-  errorMessage: string
+  errorMessage: string | null
   labelText: string
   value: string
   onChange: (e: React.FormEvent<HTMLInputElement>) => void
@@ -22,7 +22,7 @@ const InputGroupStyled = styled.div(({ theme }) => ({
     border: 'none',
     position: 'absolute',
     right: '3px',
-    top: '53%',
+    top: '52px',
     transform: 'translate(0, -50%)',
     zIndex: 2,
     '.password-visibility': {
@@ -35,8 +35,9 @@ const InputGroupStyled = styled.div(({ theme }) => ({
     }
   },
   small: {
+    minHeight: '15px',
     color: theme.colors.accent.danger,
-    opacity: 0
+    fontSize: '15px'
   }
 }))
 

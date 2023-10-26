@@ -15,7 +15,7 @@ const theme: Theme = {
       black: '#000000',
       white: '#FFFFFF',
       gray: '#F1F1F1',
-      danger: '#be1809'
+      danger: '#F32013'
     }
   },
   fonts: {
