@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import InputGroup from '../molecules/InputGroup'
+import axios, { AxiosError } from 'axios'
 
 interface SignUpFormInput {
   email: string
@@ -120,17 +121,39 @@ const SignupForm = (): JSX.Element => {
     const emailError = isEmailError(email)
     const usernameError = isUsernameError(username)
     const passwordError = isPasswordError(password)
-    const confirmPasswordError = isConfirmPasswordError(confirmPassword, password)
+    const confirmPasswordError = isConfirmPasswordError(
+      confirmPassword,
+      password
+    )
 
     return emailError || usernameError || passwordError || confirmPasswordError
   }
 
-  const handleOnSubmit = (e: React.FormEvent): void => {
+  const registerUser = async (): Promise<void> => {
+    try {
+      const userData = {
+        id: username,
+        name: username,
+        password
+      }
+      const response = await axios.post<{
+        id: string
+        name: string
+        password: string
+      }>('https://openspace-api.netlify.app/v1/users', userData)
+      console.log('Response data', response.data)
+    } catch (error) {
+      const responseError = error as AxiosError
+      console.error('Error', responseError.response?.data)
+    }
+  }
+
+  const handleOnSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     if (isFormError({ email, username, password, confirmPassword })) {
       console.log('form error')
     } else {
-      console.log('submitting')
+      await registerUser()
     }
   }
 
@@ -138,6 +161,7 @@ const SignupForm = (): JSX.Element => {
     <FormStyled
       autoComplete="off"
       onSubmit={(e) => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         handleOnSubmit(e)
       }}
     >
@@ -184,6 +208,9 @@ const SignupForm = (): JSX.Element => {
       <button type="submit" className="signup-button">
         Sign up
       </button>
+      <figure>
+        <p>User created</p>
+      </figure>
     </FormStyled>
   )
 }
