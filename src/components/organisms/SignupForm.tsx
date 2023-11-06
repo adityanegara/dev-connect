@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
+import { Users } from '../../model/users'
 import InputGroup from '../molecules/InputGroup'
 import axios, { AxiosError } from 'axios'
+import Dialog from '../atoms/Dialog'
 
-interface SignUpFormInput {
-  email: string
-  username: string
-  password: string
+interface SignUpFormInput extends Users {
   confirmPassword: string
 }
 
@@ -129,7 +128,7 @@ const SignupForm = (): JSX.Element => {
     return emailError || usernameError || passwordError || confirmPasswordError
   }
 
-  const registerUser = async (): Promise<void> => {
+  const signUpUser = async (): Promise<void> => {
     try {
       const userData = {
         id: username,
@@ -150,10 +149,8 @@ const SignupForm = (): JSX.Element => {
 
   const handleOnSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
-    if (isFormError({ email, username, password, confirmPassword })) {
-      console.log('form error')
-    } else {
-      await registerUser()
+    if (!isFormError({ email, username, password, confirmPassword })) {
+      await signUpUser()
     }
   }
 
@@ -208,9 +205,7 @@ const SignupForm = (): JSX.Element => {
       <button type="submit" className="signup-button">
         Sign up
       </button>
-      <figure>
-        <p>User created</p>
-      </figure>
+      <Dialog text='Succesfully signup an account' status='warning'/>
     </FormStyled>
   )
 }

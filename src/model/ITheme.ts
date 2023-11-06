@@ -17,6 +17,8 @@ declare module '@emotion/react' {
         gray: string
         white: string
         danger: string
+        success: string
+        warning: string
       }
     }
     fonts: {
