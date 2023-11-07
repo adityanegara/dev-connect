@@ -1,9 +1,17 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
-import { Users } from '../../model/users'
+import ReactLoading from 'react-loading'
+import Users from '../../model/users'
 import InputGroup from '../molecules/InputGroup'
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import Dialog from '../atoms/Dialog'
+import { registerUser } from '../../api/users'
+import {
+  isConfirmPasswordError,
+  isEmailError,
+  isPasswordError,
+  isUsernameError
+} from '../../utilities/validation'
 
 interface SignUpFormInput extends Users {
   confirmPassword: string
@@ -14,13 +22,18 @@ const FormStyled = styled.form(({ theme }) => ({
   flexDirection: 'column',
   gap: '10px',
   '.signup-button': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
     backgroundColor: theme.colors.primary.normal,
     fontFamily: theme.fonts.bold,
     color: theme.colors.accent.white,
-    transition: 'ease-in 0.2s'
+    transition: 'ease-in 0.2s',
+    paddingTop: '5px',
+    paddingBottom: '5px'
   },
   '.signup-button:hover': {
     backgroundColor: theme.colors.primary.hover
@@ -38,78 +51,7 @@ const SignupForm = (): JSX.Element => {
   const [confirmPasswordError, setConfirmPasswordError] = useState<
   string | null
   >(null)
-
-  const isEmailError = (email: string): boolean => {
-    const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-    if (!expression.test(email)) {
-      setEmailError('Invalid Email')
-      return true
-    } else if (email === '') {
-      setEmailError('Please fill the email')
-      return true
-    } else {
-      setEmailError(null)
-      return false
-    }
-  }
-
-  const isUsernameError = (username: string): boolean => {
-    if (username === '') {
-      setUsernameError('Please fill the username')
-      return true
-    } else {
-      setUsernameError(null)
-      return false
-    }
-  }
-
-  const isPasswordError = (password: string): boolean => {
-    const lowerCaseLetters = /[a-z]/g
-    const upperCaseLetters = /[A-Z]/g
-    const numbers = /[0-9]/g
-    if (password === '') {
-      setPasswordError('Please fill the password')
-      return true
-    } else if (password.match(lowerCaseLetters) == null) {
-      setPasswordError(
-        'Password need to contain at least one lowercase letters'
-      )
-      return true
-    } else if (password.match(upperCaseLetters) == null) {
-      setPasswordError(
-        'Password need to contain at least one uppercase letters'
-      )
-      return true
-    } else if (password.match(numbers) == null) {
-      setPasswordError('Password need to contain at least one numbers')
-      return true
-    } else if (password.length < 8) {
-      setPasswordError('Password need at least 8 characters long')
-      return true
-    } else if (password === '') {
-      setPasswordError('Please fill the password')
-      return true
-    } else {
-      setPasswordError(null)
-      return false
-    }
-  }
-
-  const isConfirmPasswordError = (
-    confirmPassword: string,
-    password: string
-  ): boolean => {
-    if (confirmPassword === '') {
-      setConfirmPasswordError('Please fill the confirm password')
-      return true
-    } else if (confirmPassword !== password) {
-      setConfirmPasswordError('Confirm password must match with password')
-      return true
-    } else {
-      setConfirmPasswordError(null)
-      return false
-    }
-  }
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const isFormError = ({
     email,
@@ -117,12 +59,13 @@ const SignupForm = (): JSX.Element => {
     password,
     confirmPassword
   }: SignUpFormInput): boolean => {
-    const emailError = isEmailError(email)
-    const usernameError = isUsernameError(username)
-    const passwordError = isPasswordError(password)
+    const emailError = isEmailError(email, setEmailError)
+    const usernameError = isUsernameError(username, setUsernameError)
+    const passwordError = isPasswordError(password, setPasswordError)
     const confirmPasswordError = isConfirmPasswordError(
       confirmPassword,
-      password
+      password,
+      setConfirmPasswordError
     )
 
     return emailError || usernameError || passwordError || confirmPasswordError
@@ -130,20 +73,14 @@ const SignupForm = (): JSX.Element => {
 
   const signUpUser = async (): Promise<void> => {
     try {
-      const userData = {
-        id: username,
-        name: username,
-        password
-      }
-      const response = await axios.post<{
-        id: string
-        name: string
-        password: string
-      }>('https://openspace-api.netlify.app/v1/users', userData)
+      setIsSubmitting(true)
+      const response = await registerUser({ email, username, password })
       console.log('Response data', response.data)
     } catch (error) {
       const responseError = error as AxiosError
       console.error('Error', responseError.response?.data)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -152,6 +89,22 @@ const SignupForm = (): JSX.Element => {
     if (!isFormError({ email, username, password, confirmPassword })) {
       await signUpUser()
     }
+  }
+  const renderLoadingIndicator = (
+    isSubmitting: boolean
+  ): JSX.Element | string => {
+    return isSubmitting
+      ? (
+      <ReactLoading
+        type={'spin'}
+        color={'white'}
+        height={'35px'}
+        width={'35px'}
+      />
+        )
+      : (
+          'Sign up'
+        )
   }
 
   return (
@@ -203,9 +156,9 @@ const SignupForm = (): JSX.Element => {
         value={confirmPassword}
       />
       <button type="submit" className="signup-button">
-        Sign up
+        {renderLoadingIndicator(isSubmitting)}
       </button>
-      <Dialog text='Succesfully signup an account' status='warning'/>
+      <Dialog text="Succesfully signup an account" status="warning" />
     </FormStyled>
   )
 }

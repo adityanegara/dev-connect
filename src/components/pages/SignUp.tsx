@@ -10,7 +10,8 @@ const SingupFormWrapper = styled.div({
 })
 
 const SignupPage = styled.section(({ theme }) => ({
-  marginTop: '3vh'
+  marginTop: '3vh',
+  paddingBottom: '8vh'
 }))
 
 const SignUp = (): JSX.Element => {
