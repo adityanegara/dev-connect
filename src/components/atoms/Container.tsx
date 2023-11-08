@@ -17,7 +17,7 @@ const ContainerWrapper = styled.div(({ size }: ContainerWrapperProps) => ({
 }))
 
 const Container = ({ children, size }: ContainerProps): JSX.Element => {
-  return <ContainerWrapper size={size}>{children}</ContainerWrapper>
+  return <ContainerWrapper role='container' size={size}>{children}</ContainerWrapper>
 }
 
 export default Container

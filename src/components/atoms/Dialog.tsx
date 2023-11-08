@@ -25,11 +25,11 @@ const getBackgroundColor = (status: Status): string => {
 
 const getDialogIcon = (status: Status): JSX.Element => {
   if (status === 'success') {
-    return <AiOutlineCheck className="dialog-icon" />
+    return <AiOutlineCheck role='success-icon' className="dialog-icon" />
   } else if (status === 'warning') {
-    return <AiOutlineWarning className="dialog-icon" />
+    return <AiOutlineWarning role='warning-icon' className="dialog-icon" />
   }
-  return <AiOutlineStop className="dialog-icon" />
+  return <AiOutlineStop role='danger-icon' className="dialog-icon" />
 }
 
 const DialogStyled = styled.div(({ status }: { status: Status }) => ({
@@ -52,7 +52,7 @@ const DialogStyled = styled.div(({ status }: { status: Status }) => ({
 
 const Dialog = ({ status, text }: DialogProps): JSX.Element => {
   return (
-    <DialogStyled status={status}>
+    <DialogStyled status={status} role='dialog'>
       {getDialogIcon(status)}
       <p>{text}</p>
     </DialogStyled>
