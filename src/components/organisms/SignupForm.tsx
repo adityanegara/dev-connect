@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import ReactLoading from 'react-loading'
+import RegisterResponse from '../../model/registerResponse'
 import Users from '../../model/users'
 import InputGroup from '../molecules/InputGroup'
 import { AxiosError } from 'axios'
@@ -52,6 +53,7 @@ const SignupForm = (): JSX.Element => {
   string | null
   >(null)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [response, setResponse] = useState<RegisterResponse>()
 
   const isFormError = ({
     email,
@@ -75,10 +77,10 @@ const SignupForm = (): JSX.Element => {
     try {
       setIsSubmitting(true)
       const response = await registerUser({ email, username, password })
-      console.log('Response data', response.data)
+      setResponse(response.data)
     } catch (error) {
       const responseError = error as AxiosError
-      console.error('Error', responseError.response?.data)
+      setResponse(responseError.response?.data as RegisterResponse)
     } finally {
       setIsSubmitting(false)
     }
@@ -105,6 +107,20 @@ const SignupForm = (): JSX.Element => {
       : (
           'Sign up'
         )
+  }
+
+  const renderDialog = (
+    response: RegisterResponse | undefined
+  ): JSX.Element | null => {
+    if (response != null) {
+      return (
+        <Dialog
+          text={response.message}
+          status={response.status === 'success' ? 'success' : 'danger'}
+        />
+      )
+    }
+    return null
   }
 
   return (
@@ -158,7 +174,7 @@ const SignupForm = (): JSX.Element => {
       <button type="submit" className="signup-button">
         {renderLoadingIndicator(isSubmitting)}
       </button>
-      <Dialog text="Succesfully signup an account" status="warning" />
+      {renderDialog(response)}
     </FormStyled>
   )
 }
