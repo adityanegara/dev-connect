@@ -60,13 +60,13 @@ const InputGroup = ({
   ): JSX.Element | null => {
     return type === 'password'
       ? (
-      <button type="button" className="password-button" onClick={togglePasswordVisibility}>
+      <button role='password-visibility-button' type="button" className="password-button" onClick={togglePasswordVisibility}>
         {isPasswordVisible
           ? (
-          <AiFillEyeInvisible className="password-visibility" />
+          <AiFillEyeInvisible role='password-visible-icon' className="password-visibility" />
             )
           : (
-          <AiFillEye className="password-visibility" />
+          <AiFillEye role='password-invisible-icon' className="password-visibility" />
             )}
       </button>
         )
@@ -83,8 +83,8 @@ const InputGroup = ({
   }
 
   return (
-    <InputGroupStyled>
-      <label htmlFor={id}>{labelText}</label>
+    <InputGroupStyled role='input-group'>
+      <label role='label' htmlFor={id}>{labelText}</label>
       <Input
         type={getInputType(type)}
         id={id}
