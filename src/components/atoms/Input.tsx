@@ -25,7 +25,7 @@ const InputStyled = styled.input(({ theme }) => ({
 }))
 
 const Input = ({ type, id, value, onChange }: InputProps): JSX.Element => (
-  <InputStyled type={type} id={id} name={id} value={value} onChange={onChange}/>
+  <InputStyled type={type} id={id} name={id} value={value} onChange={onChange} role='input'/>
 )
 
 export default Input

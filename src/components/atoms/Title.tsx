@@ -16,6 +16,6 @@ const TitleWrapper = styled.a(({ theme }) => ({
   }
 }))
 
-const Title = ({ text }: TitleProps): JSX.Element => <TitleWrapper>{text}</TitleWrapper>
+const Title = ({ text }: TitleProps): JSX.Element => <TitleWrapper role='title'>{text}</TitleWrapper>
 
 export default Title
