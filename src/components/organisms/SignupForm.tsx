@@ -97,12 +97,13 @@ const SignupForm = (): JSX.Element => {
   ): JSX.Element | string => {
     return isSubmitting
       ? (
-      <ReactLoading
+        <div role="loading-indicator"> <ReactLoading
         type={'spin'}
         color={'white'}
         height={'35px'}
         width={'35px'}
-      />
+      /></div>
+
         )
       : (
           'Sign up'
@@ -171,7 +172,7 @@ const SignupForm = (): JSX.Element => {
         errorMessage={confirmPasswordError}
         value={confirmPassword}
       />
-      <button type="submit" className="signup-button">
+      <button type="submit" className="signup-button" role='signup-button'>
         {renderLoadingIndicator(isSubmitting)}
       </button>
       {renderDialog(response)}

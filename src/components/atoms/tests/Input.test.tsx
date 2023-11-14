@@ -16,7 +16,7 @@ describe('Input', () => {
           onChange={onChangeMock}
         />
       </ThemeProvider>)
-    const inputElement = getByRole('input')
+    const inputElement = getByRole('id-test')
     fireEvent.change(inputElement, { target: { value: 'new value' } })
     expect(onChangeMock).toHaveBeenCalled()
   })
@@ -32,7 +32,7 @@ describe('Input', () => {
         />
       </ThemeProvider>
     )
-    const inputElement = getByRole('input')
+    const inputElement = getByRole('id-test')
     expect(inputElement).toHaveAttribute('type', 'text')
     expect(inputElement).toHaveAttribute('id', 'id-test')
     expect(inputElement).toHaveAttribute('value', 'value-test')
