@@ -3,11 +3,11 @@ export const isEmailError = (
   setEmailError: (value: React.SetStateAction<string | null>) => void
 ): boolean => {
   const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-  if (!expression.test(email)) {
-    setEmailError('Invalid Email')
-    return true
-  } else if (email === '') {
+  if (email === '') {
     setEmailError('Please fill the email')
+    return true
+  } else if (!expression.test(email)) {
+    setEmailError('Invalid Email')
     return true
   } else {
     setEmailError(null)

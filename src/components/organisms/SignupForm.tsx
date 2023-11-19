@@ -80,7 +80,12 @@ const SignupForm = (): JSX.Element => {
       setResponse(response.data)
     } catch (error) {
       const responseError = error as AxiosError
-      setResponse(responseError.response?.data as RegisterResponse)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (responseError.response?.data as RegisterResponse) {
+        setResponse(responseError.response?.data as RegisterResponse)
+      } else {
+        setResponse({ status: 'error', message: 'Network Error' })
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -97,13 +102,15 @@ const SignupForm = (): JSX.Element => {
   ): JSX.Element | string => {
     return isSubmitting
       ? (
-        <div role="loading-indicator"> <ReactLoading
-        type={'spin'}
-        color={'white'}
-        height={'35px'}
-        width={'35px'}
-      /></div>
-
+      <div role="loading-indicator">
+        {' '}
+        <ReactLoading
+          type={'spin'}
+          color={'white'}
+          height={'35px'}
+          width={'35px'}
+        />
+      </div>
         )
       : (
           'Sign up'
@@ -172,7 +179,7 @@ const SignupForm = (): JSX.Element => {
         errorMessage={confirmPasswordError}
         value={confirmPassword}
       />
-      <button type="submit" className="signup-button" role='signup-button'>
+      <button type="submit" className="signup-button" role="signup-button">
         {renderLoadingIndicator(isSubmitting)}
       </button>
       {renderDialog(response)}

@@ -1,7 +1,7 @@
 export default interface RegisterResponse {
   status: string
   message: string
-  data: {
+  data?: {
     user: {
       id: string
       name: string
