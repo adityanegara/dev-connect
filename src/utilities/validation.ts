@@ -2,12 +2,14 @@ export const isEmailError = (
   email: string,
   setEmailError: (value: React.SetStateAction<string | null>) => void
 ): boolean => {
-  const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
   if (email === '') {
     setEmailError('Please fill the email')
     return true
-  } else if (!expression.test(email)) {
-    setEmailError('Invalid Email')
+  } else if (!email.includes('@')) {
+    setEmailError('Email is missing @ symbol')
+    return true
+  } else if (!email.includes('.')) {
+    setEmailError('Email is missing . symbol')
     return true
   } else {
     setEmailError(null)

@@ -83,7 +83,7 @@ describe('SingupForm', () => {
     fireEvent.change(passwordInput, { target: { value: 'testing' } })
     fireEvent.change(confirmPasswordInput, { target: { value: 'testing' } })
     fireEvent.click(signUpButton)
-    expect(getByText('Invalid Email')).toBeInTheDocument()
+    expect(getByText('Email is missing @ symbol')).toBeInTheDocument()
     expect(getByText('Please fill the username')).toBeInTheDocument()
     expect(getByText('Password need to contain at least one uppercase letters')).toBeInTheDocument()
   })
