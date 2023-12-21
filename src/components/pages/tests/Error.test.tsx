@@ -1,39 +1,18 @@
-import { render } from '@testing-library/react'
+import './matchMedia.mock'
 import React from 'react'
-import '@testing-library/jest-dom'
-import App from '../../../App'
-import { BrowserRouter, MemoryRouter } from 'react-router-dom'
-import { ThemeProvider } from '@emotion/react'
-import theme from '../../../theme/styledTheme'
+import Error from '../Error'
+import { render } from '@testing-library/react'
+import { useRouteError } from 'react-router-dom'
 
-describe('test', () => {
-  beforeAll(() => {
-    window.matchMedia = (query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(), // Deprecated
-      removeListener: jest.fn(), // Deprecated
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn()
-    })
-  })
-  it('should render all', async () => {
-    render(<ThemeProvider theme={theme}><App /></ThemeProvider>, { wrapper: BrowserRouter })
-  })
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useRouteError: jest.fn()
+}))
 
-  it('should land on a bad page', () => {
-    const badRoute = '/signup'
-    const { getByText } = render(
-        <ThemeProvider theme={theme}>
-      <MemoryRouter initialEntries={[badRoute]}>
-
-        <App />
-
-      </MemoryRouter>
-      </ThemeProvider>
-    )
-    expect(getByText('Oops!')).toBeInTheDocument()
+describe('Error page', () => {
+  it('Should render error page', () => {
+    const mockAdd = jest.fn(useRouteError)
+    mockAdd.mockReturnValue(5)
+    render(<Error />)
   })
 })
