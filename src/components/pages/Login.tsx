@@ -10,16 +10,16 @@ const SingupFormWrapper = styled.div({
   marginTop: '5vh'
 })
 
-const SignUp = (): JSX.Element => {
+const Login = (): JSX.Element => {
   const isDesktop = useMediaQuery(`(min-width: ${theme.layout.mobile})`)
   return (
     <Container size={isDesktop ? 60 : 90}>
       <>
         <AuthenticationHeader
-          header="Sign up"
-          paragraph="If you already have an account You can"
-          linkText="Login here!"
-          linkTo='/login'
+          header='Login'
+          paragraph='New to DevConnect?'
+          linkText='Sign up here!'
+          linkTo='/signup'
         />
         <SingupFormWrapper>
           <SignupForm />
@@ -29,4 +29,4 @@ const SignUp = (): JSX.Element => {
   )
 }
 
-export default SignUp
+export default Login

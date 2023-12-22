@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 interface AuthenticationHeaderProps {
   header: string
   paragraph: string
   linkText: string
+  linkTo: string
 }
 
 const AuthenticationHeaderWrapper = styled.div(({ theme }) => ({
@@ -33,13 +35,14 @@ const AuthenticationHeaderWrapper = styled.div(({ theme }) => ({
 const AuthenticationHeader = ({
   header,
   paragraph,
-  linkText
+  linkText,
+  linkTo
 }: AuthenticationHeaderProps): JSX.Element => {
   return (
     <AuthenticationHeaderWrapper>
       <h1>{header}</h1>
       <p>{paragraph}</p>
-      <a>{linkText}</a>
+      <Link to={linkTo}>{linkText}</Link>
     </AuthenticationHeaderWrapper>
   )
 }
