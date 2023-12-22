@@ -1,8 +1,9 @@
-// Dummy import so that the linter won't complain
-import { render } from '@testing-library/react'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React from 'react'
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: (query) => ({
+  value: (query: any) => ({
     matches: false,
     media: query,
     onchange: null,
