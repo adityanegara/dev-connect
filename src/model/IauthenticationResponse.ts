@@ -1,4 +1,4 @@
-export default interface RegisterResponse {
+export default interface AuthenticationResponse {
   status: string
   message: string
   data?: {

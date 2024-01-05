@@ -2,11 +2,11 @@ import React from 'react'
 import styled from '@emotion/styled'
 import Container from '../atoms/Container'
 import AuthenticationHeader from '../organisms/AuthenticationHeader'
-import SignupForm from '../organisms/SignupForm'
 import { useMediaQuery } from '../../hooks/useMediaQueries'
 import theme from '../../theme/styledTheme'
+import LoginForm from '../organisms/LoginForm'
 
-const SingupFormWrapper = styled.div({
+const LoginFormWrapper = styled.div({
   marginTop: '5vh'
 })
 
@@ -21,9 +21,9 @@ const Login = (): JSX.Element => {
           linkText='Sign up here!'
           linkTo='/signup'
         />
-        <SingupFormWrapper>
-          <SignupForm />
-        </SingupFormWrapper>
+        <LoginFormWrapper>
+          <LoginForm />
+        </LoginFormWrapper>
       </>
     </Container>
   )

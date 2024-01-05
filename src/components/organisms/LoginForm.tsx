@@ -2,27 +2,17 @@ import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import ReactLoading from 'react-loading'
 import AuthenticationResponse from '../../model/IauthenticationResponse'
-import Users from '../../model/Iusers'
 import InputGroup from '../molecules/InputGroup'
 import { AxiosError } from 'axios'
 import Dialog from '../atoms/Dialog'
-import { registerUser } from '../../api/users'
-import {
-  isConfirmPasswordError,
-  isEmailError,
-  isPasswordError,
-  isUsernameError
-} from '../../utilities/validation'
-
-interface SignUpFormInput extends Users {
-  confirmPassword: string
-}
+import { loginUser } from '../../api/users'
+import { isPasswordError, isUsernameError } from '../../utilities/validation'
 
 const FormStyled = styled.form(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: '10px',
-  '.signup-button': {
+  '.login-button': {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -36,47 +26,29 @@ const FormStyled = styled.form(({ theme }) => ({
     paddingTop: '5px',
     paddingBottom: '5px'
   },
-  '.signup-button:hover': {
+  '.login-button:hover': {
     backgroundColor: theme.colors.primary.hover
   }
 }))
 
-const SignupForm = (): JSX.Element => {
-  const [email, setEmail] = useState<string>('')
-  const [emailError, setEmailError] = useState<string | null>(null)
+const LoginForm = (): JSX.Element => {
   const [username, setUsername] = useState<string>('')
   const [usernameError, setUsernameError] = useState<string | null>(null)
   const [password, setPassword] = useState<string>('')
   const [passwordError, setPasswordError] = useState<string | null>(null)
-  const [confirmPassword, setConfirmPassword] = useState<string>('')
-  const [confirmPasswordError, setConfirmPasswordError] = useState<
-  string | null
-  >(null)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [response, setResponse] = useState<AuthenticationResponse>()
 
-  const isFormError = ({
-    email,
-    username,
-    password,
-    confirmPassword
-  }: SignUpFormInput): boolean => {
-    const emailError = isEmailError(email, setEmailError)
+  const isFormError = (username: string, password: string): boolean => {
     const usernameError = isUsernameError(username, setUsernameError)
     const passwordError = isPasswordError(password, setPasswordError)
-    const confirmPasswordError = isConfirmPasswordError(
-      confirmPassword,
-      password,
-      setConfirmPasswordError
-    )
-
-    return emailError || usernameError || passwordError || confirmPasswordError
+    return usernameError || passwordError
   }
 
-  const signUpUser = async (): Promise<void> => {
+  const login = async (): Promise<void> => {
     try {
       setIsSubmitting(true)
-      const response = await registerUser({ email, username, password })
+      const response = await loginUser(username, password)
       setResponse(response.data)
     } catch (error) {
       const responseError = error as AxiosError
@@ -93,8 +65,8 @@ const SignupForm = (): JSX.Element => {
 
   const handleOnSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
-    if (!isFormError({ email, username, password, confirmPassword })) {
-      await signUpUser()
+    if (!isFormError(username, password)) {
+      await login()
     }
   }
   const renderLoadingIndicator = (
@@ -113,7 +85,7 @@ const SignupForm = (): JSX.Element => {
       </div>
         )
       : (
-          'Sign up'
+          'Login'
         )
   }
 
@@ -141,16 +113,6 @@ const SignupForm = (): JSX.Element => {
     >
       <InputGroup
         onChange={(e) => {
-          setEmail(e.currentTarget.value)
-        }}
-        id="email"
-        labelText="Email"
-        type="text"
-        errorMessage={emailError}
-        value={email}
-      />
-      <InputGroup
-        onChange={(e) => {
           setUsername(e.currentTarget.value)
         }}
         id="username"
@@ -169,17 +131,7 @@ const SignupForm = (): JSX.Element => {
         errorMessage={passwordError}
         value={password}
       />
-      <InputGroup
-        onChange={(e) => {
-          setConfirmPassword(e.currentTarget.value)
-        }}
-        id="confirm-password"
-        labelText="Confirm password"
-        type="password"
-        errorMessage={confirmPasswordError}
-        value={confirmPassword}
-      />
-      <button type="submit" className="signup-button" role="signup-button">
+      <button type="submit" className="login-button" role="login-button">
         {renderLoadingIndicator(isSubmitting)}
       </button>
       {renderDialog(response)}
@@ -187,4 +139,4 @@ const SignupForm = (): JSX.Element => {
   )
 }
 
-export default SignupForm
+export default LoginForm
