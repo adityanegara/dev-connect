@@ -10,9 +10,9 @@ describe('AuthenticationHeader', () => {
   it('Should render header, paragraph. and linkText correctly', () => {
     const { getByText } = render(
       <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <AuthenticationHeader header='header' linkText='linkText' paragraph='paragraph' linkTo='test'/>
-      </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <AuthenticationHeader header='header' linkText='linkText' paragraph='paragraph' linkTo='test'/>
+        </ThemeProvider>
       </BrowserRouter>
     )
     expect(getByText('header')).toBeInTheDocument()

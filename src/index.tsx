@@ -9,6 +9,8 @@ import Login from './components/pages/Login'
 import Error from './components/pages/Error'
 import theme from './theme/styledTheme'
 import global from './theme/global'
+import { store } from './store'
+import { Provider } from 'react-redux'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -26,7 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <Login/>
+        element: <Login />
       }
     ]
   }
@@ -34,9 +36,11 @@ const router = createBrowserRouter([
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Global styles={global} />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Global styles={global} />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>
 )

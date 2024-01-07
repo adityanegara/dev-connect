@@ -7,6 +7,8 @@ import { AxiosError } from 'axios'
 import Dialog from '../atoms/Dialog'
 import { loginUser } from '../../api/users'
 import { isPasswordError, isUsernameError } from '../../utilities/validation'
+import { useAppSelector, useAppDispatch } from '../../hook'
+import { userAuthenticated } from '../../features/user/userSlice'
 
 const FormStyled = styled.form(({ theme }) => ({
   display: 'flex',
@@ -38,6 +40,8 @@ const LoginForm = (): JSX.Element => {
   const [passwordError, setPasswordError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [response, setResponse] = useState<AuthenticationResponse>()
+  const userToken = useAppSelector((state) => state.user.token)
+  const dispatch = useAppDispatch()
 
   const isFormError = (username: string, password: string): boolean => {
     const usernameError = isUsernameError(username, setUsernameError)
@@ -50,6 +54,7 @@ const LoginForm = (): JSX.Element => {
       setIsSubmitting(true)
       const response = await loginUser(username, password)
       setResponse(response.data)
+      dispatch(userAuthenticated(response.data.data.token))
     } catch (error) {
       const responseError = error as AxiosError
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -135,6 +140,7 @@ const LoginForm = (): JSX.Element => {
         {renderLoadingIndicator(isSubmitting)}
       </button>
       {renderDialog(response)}
+      <p>usertoken: {userToken}</p>
     </FormStyled>
   )
 }
