@@ -15,9 +15,12 @@ export const userSlice = createSlice({
   reducers: {
     userAuthenticated: (state, action: PayloadAction<string>) => {
       state.token = action.payload
+    },
+    userLoggedOut: (state) => {
+      state.token = null
     }
   }
 })
 
-export const { userAuthenticated } = userSlice.actions
+export const { userAuthenticated, userLoggedOut } = userSlice.actions
 export default userSlice.reducer

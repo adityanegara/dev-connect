@@ -8,7 +8,7 @@ import Dialog from '../atoms/Dialog'
 import { loginUser } from '../../api/users'
 import { isPasswordError, isUsernameError } from '../../utilities/validation'
 import { useAppSelector, useAppDispatch } from '../../hook'
-import { userAuthenticated } from '../../features/user/userSlice'
+import { userAuthenticated, userLoggedOut } from '../../features/user/userSlice'
 
 const FormStyled = styled.form(({ theme }) => ({
   display: 'flex',
@@ -141,6 +141,7 @@ const LoginForm = (): JSX.Element => {
       </button>
       {renderDialog(response)}
       <p>usertoken: {userToken}</p>
+      <button onClick={() => { dispatch(userLoggedOut()) }}>Log out</button>
     </FormStyled>
   )
 }
